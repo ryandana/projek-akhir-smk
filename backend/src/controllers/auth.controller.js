@@ -1,6 +1,6 @@
-import jwt from 'jsonwebtoken';
-import bcrypt from 'bcryptjs';
-import User from '../models/user.model.js';
+import jwt from "jsonwebtoken";
+import bcrypt from "bcryptjs";
+import User from "../models/user.model.js";
 
 export const register = async (req, res) => {
     try {
@@ -9,23 +9,27 @@ export const register = async (req, res) => {
 
         if (exist) {
             return res.status(400).json({
-                message: "Email already exists"
+                message: "Email already exists",
             });
         }
 
         const hashedPassword = await bcrypt.hash(password, 12);
 
-        const createUser = await User.create({ email, username, nickname: username, password: hashedPassword });
+        const createUser = await User.create({
+            email,
+            username,
+            nickname: username,
+            password: hashedPassword,
+        });
 
         return res.status(201).json(createUser);
-
     } catch (error) {
         console.error(error.message);
         return res.status(500).json({
-            message: " Internal Server error"
+            message: " Internal Server error",
         });
     }
-}
+};
 
 export const login = async (req, res) => {
     try {
@@ -35,7 +39,7 @@ export const login = async (req, res) => {
 
         if (!user) {
             return res.status(404).json({
-                message: "User not found"
+                message: "User not found",
             });
         }
 
@@ -43,39 +47,35 @@ export const login = async (req, res) => {
 
         if (!comparePassword) {
             return res.status(401).json({
-                message: "Invalid credentials"
+                message: "Invalid credentials",
             });
         }
 
-        const token = jwt.sign(
-            { id: user._id },
-            process.env.JWT_SECRET,
-            { expiresIn: process.env.JWT_EXPIRES_IN })
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+            expiresIn: process.env.JWT_EXPIRES_IN,
+        });
 
         res.cookie("token", token, {
             httpOnly: true,
             sameSite: "lax",
             secure: process.env.NODE_ENV === "production",
-            maxAge: 24 * 60 * 60 * 1000
+            maxAge: 24 * 60 * 60 * 1000,
         });
 
         const safeUser = user.toObject();
         delete safeUser.password;
 
-
         return res.status(200).json({
             message: "Login successful",
-            safeUser
+            safeUser,
         });
-
     } catch (error) {
         console.error(error.message);
         return res.status(500).json({
-            message: " Internal Server error"
+            message: " Internal Server error",
         });
     }
-
-}
+};
 
 export const check = (req, res) => {
     try {
@@ -83,23 +83,52 @@ export const check = (req, res) => {
     } catch (error) {
         console.error(error.message);
         return res.status(500).json({
-            message: " Internal Server error"
+            message: " Internal Server error",
         });
     }
-}
+};
 
 export const logout = (req, res) => {
     try {
         res.clearCookie("token", {
-            httpOnly: true
+            httpOnly: true,
         });
         return res.status(200).json({
-            message: "Logout successful"
+            message: "Logout successful",
         });
     } catch (error) {
         console.error(error.message);
         return res.status(500).json({
-            message: " Internal Server error"
+            message: " Internal Server error",
         });
     }
-}
+};
+
+export const update = async (req, res) => {
+    try {
+        const { email, username, nickname, password } = req.body;
+        const user = req.user;
+
+        if (email) user.email = email;
+        if (username) user.username = username;
+        if (nickname) user.nickname = nickname;
+        if (password) {
+            user.password = await bcrypt.hash(password, 12);
+        }
+
+        await user.save();
+
+        const safeUser = user.toObject();
+        delete safeUser.password;
+
+        return res.status(200).json({
+            message: "User updated successfully",
+            user: safeUser,
+        });
+    } catch (error) {
+        console.error(error.message);
+        return res.status(500).json({
+            message: " Internal Server error",
+        });
+    }
+};
