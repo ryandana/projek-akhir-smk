@@ -9,24 +9,26 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Hydrate user from localStorage and /api/auth/me on mount
+  // Hydrate user from API on mount
+  const fetchUser = async () => {
+    try {
+      const data = await api.get("/api/auth/me");
+      setUser(data);
+      localStorage.setItem("user", JSON.stringify(data));
+    } catch (err) {
+      // Try localStorage fallback if API fails
+      try {
+        const stored = localStorage.getItem("user");
+        if (stored) setUser(JSON.parse(stored));
+      } catch {}
+      setUser(null);
+    }
+  };
+
   useEffect(() => {
     const hydrate = async () => {
-      try {
-        // Try fetching current user from API
-        const data = await api.get("/api/auth/me");
-        setUser(data);
-        localStorage.setItem("user", JSON.stringify(data));
-      } catch (err) {
-        // Try localStorage fallback
-        try {
-          const stored = localStorage.getItem("user");
-          if (stored) setUser(JSON.parse(stored));
-        } catch {}
-        setUser(null);
-      } finally {
-        setLoading(false);
-      }
+      await fetchUser();
+      setLoading(false);
     };
 
     hydrate();
@@ -43,8 +45,12 @@ export function AuthProvider({ children }) {
     }
   };
 
+  const refreshUser = async () => {
+    await fetchUser();
+  };
+
   return (
-    <AuthContext.Provider value={{ user, loading, logout }}>
+    <AuthContext.Provider value={{ user, loading, logout, refreshUser }}>
       {children}
     </AuthContext.Provider>
   );

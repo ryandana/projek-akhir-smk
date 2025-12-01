@@ -13,7 +13,7 @@ import { useAuth } from "@/context/auth.context";
 
 export default function Login() {
   const router = useRouter();
-  const { user, loading: authLoading } = useAuth();
+  const { user, loading: authLoading, refreshUser } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
@@ -31,14 +31,10 @@ export default function Login() {
     setError(null);
     setLoading(true);
     try {
-      const data = await api.post("/api/auth/login", { email, password });
+      await api.post("/api/auth/login", { email, password });
 
-      // Backend sets cookie; optionally store user in localStorage
-      if (data?.safeUser) {
-        try {
-          localStorage.setItem("user", JSON.stringify(data.safeUser));
-        } catch {}
-      }
+      // Refresh user context to populate avatar immediately
+      await refreshUser();
 
       router.push("/");
     } catch (err) {

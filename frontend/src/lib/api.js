@@ -1,55 +1,41 @@
+import axios from "axios";
+
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
-async function handleRes(res) {
-  const text = await res.text();
-  let data = null;
-  try {
-    data = text ? JSON.parse(text) : {};
-  } catch (err) {
-    // not json
-    data = { message: text };
-  }
+// Create axios instance with default config
+const axiosInstance = axios.create({
+  baseURL: API_BASE,
+  withCredentials: true, // Include cookies in requests
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
 
-  if (!res.ok) {
-    const err = new Error(data?.message || res.statusText || "Request failed");
-    err.status = res.status;
-    err.data = data;
-    throw err;
+// Handle errors consistently
+axiosInstance.interceptors.response.use(
+  (response) => response.data,
+  (error) => {
+    const customErr = new Error(
+      error?.response?.data?.message || error?.message || "Request failed"
+    );
+    customErr.status = error?.response?.status;
+    customErr.data = error?.response?.data;
+    throw customErr;
   }
-
-  return data;
-}
+);
 
 export async function post(path, body) {
-  const res = await fetch(`${API_BASE}${path}`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    credentials: "include",
-    body: JSON.stringify(body),
-  });
-  return handleRes(res);
+  return axiosInstance.post(path, body);
 }
 
 export async function get(path) {
-  const res = await fetch(`${API_BASE}${path}`, {
-    method: "GET",
-    credentials: "include",
-  });
-  return handleRes(res);
+  return axiosInstance.get(path);
 }
 
 export async function put(path, body) {
-  const res = await fetch(`${API_BASE}${path}`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    credentials: "include",
-    body: JSON.stringify(body),
-  });
-  return handleRes(res);
+  return axiosInstance.put(path, body);
 }
 
-export default { post, get, put };
+const api = { post, get, put };
+
+export default api;

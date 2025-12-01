@@ -19,7 +19,6 @@ export default function Profile() {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
   const [loading, setLoading] = useState(false);
-
   // Redirect if not logged in
   useEffect(() => {
     if (!authLoading && !user) {
@@ -80,7 +79,7 @@ export default function Profile() {
           )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="form-control w-full">
+            <div className="form-control column-gap w-full">
               <label className="label">
                 <span className="label-text">Username</span>
               </label>
@@ -88,10 +87,11 @@ export default function Profile() {
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 name="username"
+                disabled
               />
             </div>
 
-            <div className="form-control w-full">
+            <div className="form-control column-gap w-full">
               <label className="label">
                 <span className="label-text">Email</span>
               </label>
@@ -102,7 +102,7 @@ export default function Profile() {
               />
             </div>
 
-            <div className="form-control w-full">
+            <div className="form-control column-gap w-full">
               <label className="label">
                 <span className="label-text">Nickname (Display Name)</span>
               </label>
@@ -116,7 +116,7 @@ export default function Profile() {
               />
             </div>
 
-            <div className="form-control w-full">
+            <div className="form-control column-gap w-full">
               <label className="label">
                 <span className="label-text">New Password (optional)</span>
               </label>
