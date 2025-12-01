@@ -64,9 +64,9 @@ const userSchema = new mongoose.Schema(
 
 const classSchema = new mongoose.Schema(
     {
-        name: { type: String, required: true, unique: true },
-        tingkat: { type: String, enum: ["X", "XI", "XII"], required: true },
-        jurusan: { type: String, required: true },
+        className: { type: String, required: true, unique: true },
+        gradeLevel: { type: String, enum: ["X", "XI", "XII"], required: true },
+        major: { type: String, required: true },
     },
     { timestamps: true }
 );

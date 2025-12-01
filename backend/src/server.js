@@ -1,9 +1,11 @@
 import express from "express";
 import dotenv from "dotenv";
 import dbConnect from "./config/db.js";
-import authRoutes from "./routes/auth.routes.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+
+import authRoutes from "./routes/auth.routes.js";
+import studentRoutes from "./routes/student.route.js";
 
 dotenv.config();
 
@@ -25,7 +27,10 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+
+// Routes
 app.use("/api/auth", authRoutes);
+app.use("/api/students", studentRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
