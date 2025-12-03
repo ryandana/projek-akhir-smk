@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
 // Create axios instance with default config
 const axiosInstance = axios.create({
@@ -16,12 +16,12 @@ axiosInstance.interceptors.response.use(
   (response) => response.data,
   (error) => {
     const customErr = new Error(
-      error?.response?.data?.message || error?.message || "Request failed"
+      error?.response?.data?.message || error?.message || "Request failed",
     );
     customErr.status = error?.response?.status;
     customErr.data = error?.response?.data;
     throw customErr;
-  }
+  },
 );
 
 export async function post(path, body) {

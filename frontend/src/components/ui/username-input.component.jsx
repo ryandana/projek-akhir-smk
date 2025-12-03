@@ -3,7 +3,7 @@ import { IconUser } from "@tabler/icons-react";
 export default function UsernameInput(props) {
   return (
     <>
-      <label className="input validator w-full">
+      <label className="input w-full">
         <IconUser className="opacity-50" size={20} />
         <input
           type="text"
@@ -16,11 +16,6 @@ export default function UsernameInput(props) {
           {...props}
         />
       </label>
-      <p className="validator-hint mt-0 hidden">
-        Must be 3 to 30 characters
-        <br />
-        containing only letters, numbers or dash
-      </p>
     </>
   );
 }
