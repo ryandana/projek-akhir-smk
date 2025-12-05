@@ -22,7 +22,7 @@ export default function Login() {
   // Redirect if already logged in
   useEffect(() => {
     if (!authLoading && user) {
-      router.push("/");
+      router.push("/feed");
     }
   }, [user, authLoading, router]);
 

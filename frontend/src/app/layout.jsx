@@ -1,9 +1,6 @@
 import { Poppins, JetBrains_Mono, Crimson_Pro, Inter } from "next/font/google";
 import "./globals.css";
-import Header from "@/components/ui/header.component";
 import { AuthProvider } from "@/context/auth.context";
-
-
 
 const poppinsSans = Poppins({
   variable: "--font-poppins-sans",
@@ -27,10 +24,7 @@ export default function RootLayout({ children }) {
       <body
         className={` ${poppinsSans.variable} ${jetbrainsMono.variable} antialiased`}
       >
-        <AuthProvider>
-          <Header />
-          {children}
-        </AuthProvider>
+        <AuthProvider>{children}</AuthProvider>
       </body>
     </html>
   );

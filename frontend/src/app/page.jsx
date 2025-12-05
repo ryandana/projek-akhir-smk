@@ -1,17 +1,28 @@
+"use client"
+
 import Section from "@/components/atoms/section.component";
 import Button from "@/components/ui/button.component";
-import CountUp from "@/components/ui/count-up.component";
+import { useAuth } from "@/context/auth.context";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function Page() {
+  const router = useRouter();
+  const { user, loading: authLoading, refreshUser } = useAuth();
+  useEffect(() => {
+    if (!authLoading && user) {
+      router.push("/feed");
+    }
+  }, [user, authLoading, router]);
   return (
     <>
       <Section className="relative flex flex-col items-center justify-center max-w-screen py-32 px-4 text-center">
-        <div className="prose lg:prose-xl mx-auto">
+        <div className="prose lg:prose-xl md:prose-h1:text-6xl prose-h1:text-4xl mx-auto">
           <h1 className="font-bold leading-tight">
             Where developers share what matters.
           </h1>
-          <p className="text-lg max-w-2xl mx-auto">
+          <p className="text-base max-w-2xl mx-auto">
             Articles, insights, and experiences from real developers. Powered by
             AI to help you discover knowledge worth reading.
           </p>

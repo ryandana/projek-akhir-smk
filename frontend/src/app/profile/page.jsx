@@ -57,7 +57,7 @@ export default function Profile() {
 
   if (authLoading) {
     return (
-      <Section className="flex items-center justify-center pt-24 min-h-screen">
+      <Section className="flex items-center justify-center min-h-screen">
         <div className="loading loading-spinner loading-lg"></div>
       </Section>
     );
@@ -68,15 +68,20 @@ export default function Profile() {
   }
 
   return (
-    <Section className="flex flex-col items-center justify-center pt-24 min-h-screen">
-      <div className="card bg-base-100 shadow-xl max-w-md w-full">
+    <Section className="flex flex-col items-center justify-center min-h-screen">
+      {error && (
+        <div className="alert absolute top-4 left-1/2 -translate-x-1/2 alert-error text-sm">
+          {error}
+        </div>
+      )}
+      {success && (
+        <div className="alert absolute top-4 left-1/2 -translate-x-1/2 alert-success text-sm">
+          {success}
+        </div>
+      )}
+      <div className="card bg-base-100 max-w-lg w-full">
         <div className="card-body">
           <h2 className="card-title">Your Profile</h2>
-
-          {error && <div className="alert alert-error text-sm">{error}</div>}
-          {success && (
-            <div className="alert alert-success text-sm">{success}</div>
-          )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="form-control column-gap w-full">
@@ -87,7 +92,6 @@ export default function Profile() {
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 name="username"
-                disabled
               />
             </div>
 
@@ -118,7 +122,7 @@ export default function Profile() {
 
             <div className="form-control column-gap w-full">
               <label className="label">
-                <span className="label-text">New Password (optional)</span>
+                <span className="label-text">Change Password</span>
               </label>
               <input
                 type="password"
@@ -131,7 +135,7 @@ export default function Profile() {
               />
             </div>
 
-            <Button type="submit" disabled={loading}>
+            <Button className="w-full" type="submit" disabled={loading}>
               {loading ? "Saving..." : "Save Changes"}
             </Button>
           </form>
