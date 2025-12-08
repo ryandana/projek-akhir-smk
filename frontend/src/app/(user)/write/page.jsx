@@ -6,14 +6,22 @@ import api from "@/lib/api";
 import { useAuth } from "@/context/auth.context";
 import { IconPhoto, IconSend, IconX } from "@tabler/icons-react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { useState, useRef } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useState, useRef, useEffect, Suspense } from "react";
 import ReactMarkdown from "react-markdown";
+import { getImageUrl } from "@/lib/imageUrl";
+import Link from "next/link";
+import remarkGfm from "remark-gfm";
+import rehypeSanitize from "rehype-sanitize";
+import { useToast } from "@/context/toast.context";
 
-export default function WritePage() {
-    const { user } = useAuth();
+function WritePageContent() {
+    const { user, loading: authLoading } = useAuth();
     const router = useRouter();
+    const searchParams = useSearchParams();
+    const editId = searchParams.get("edit");
     const fileInputRef = useRef(null);
+    const { addToast } = useToast();
 
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState(""); // This is the body
@@ -21,7 +29,47 @@ export default function WritePage() {
     const [thumbnail, setThumbnail] = useState(null);
     const [thumbnailPreview, setThumbnailPreview] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [fetching, setFetching] = useState(!!editId);
     const [error, setError] = useState("");
+
+    useEffect(() => {
+        if (editId) {
+            const fetchPost = async () => {
+                try {
+                    setFetching(true);
+                    const post = await api.get(`/api/posts/${editId}`);
+                    setTitle(post.title);
+                    setDescription(post.body);
+                    setTags(post.tags.join(", "));
+                    if (post.thumbnail_url) {
+                        setThumbnailPreview(getImageUrl(post.thumbnail_url));
+                    }
+
+                    // We must check if auth is still loading. 
+                    // If authLoading is true, we don't know the user yet, so we cannot verify permission.
+                    // This logic depends on `authLoading` being part of dependencies.
+                    if (!authLoading && user && post.author._id !== user._id) {
+                        addToast("You do not have permission to edit this post.", "error");
+                        router.push("/feed");
+                        return;
+                    }
+                } catch (err) {
+                    console.error("Failed to fetch post for editing", err);
+                    setError("Failed to load post data.");
+                } finally {
+                    setFetching(false);
+                }
+            };
+
+            // Only fetch if auth is done or if we don't care about auth related checks for *fetching* 
+            // but we DO care about auth check for *permission*.
+            // Actually, we can fetch, and then check permission once user is loaded?
+            // Or better: Re-run this effect when `authLoading` changes.
+            if (!authLoading) {
+                fetchPost();
+            }
+        }
+    }, [editId, user, authLoading]);
 
     const handleThumbnailChange = (e) => {
         const file = e.target.files[0];
@@ -42,36 +90,74 @@ export default function WritePage() {
         setError("");
         setLoading(true);
 
-        if (!title || !description || !thumbnail) {
-            setError("Please fill in all required fields (Title, Body, Thumbnail).");
+        // Validation: slightly different for edit mode (thumbnail might not change)
+        if (!title || !description) {
+            setError("Please fill in Title and Body.");
             setLoading(false);
             return;
         }
+        if (!editId && !thumbnail) {
+            setError("Thumbnail is required for new posts.");
+            setLoading(false);
+            return;
+        }
+
 
         try {
             const formData = new FormData();
             formData.append("title", title);
             formData.append("body", description);
-            formData.append("thumbnail_url", thumbnail);
+            if (thumbnail) {
+                formData.append("thumbnail_url", thumbnail);
+            }
+
             formData.append("userId", user?._id);
 
             formData.append("tags", JSON.stringify(tags.split(",").map(t => t.trim()).filter(Boolean)));
 
-            await api.post("/api/posts", formData);
-            router.push("/feed");
+            if (editId) {
+                await api.put(`/api/posts/${editId}`, formData);
+            } else {
+                await api.post("/api/posts", formData);
+            }
+
+            router.push(editId ? `/post/${editId}` : "/feed");
         } catch (err) {
             console.error(err);
-            setError(err.message || "Failed to create post");
+            setError(err.message || "Failed to save post");
         } finally {
             setLoading(false);
         }
     };
 
+    if (fetching) {
+        return (
+            <div className="flex justify-center items-center h-screen">
+                <span className="loading loading-spinner loading-lg"></span>
+            </div>
+        );
+    }
+
     return (
         <Section className="py-24">
-            <div className="max-w-4xl mx-auto">
+            <div className="mx-auto">
+                {/* Breadcrumbs */}
+                <div className="text-sm breadcrumbs mb-6">
+                    <ul>
+                        <li><Link href="/">Home</Link></li>
+                        {editId ? (
+                            <>
+                                <li><Link href={`/post/${editId}`}>Post</Link></li>
+                                <li>Edit</li>
+                            </>
+                        ) : (
+                            <li>Write</li>
+                        )}
+                    </ul>
+                </div>
+
                 <div className="mb-8">
-                    <h1 className="text-3xl font-bold mb-2">Write a Post</h1>
+                    <h1 className="text-3xl font-bold mb-2">{editId ? "Edit Post" : "Write a Post"}</h1>
                     <p className="text-gray-500">Share your knowledge with the community</p>
                 </div>
 
@@ -107,6 +193,7 @@ export default function WritePage() {
                                     alt="Thumbnail preview"
                                     fill
                                     className="object-cover"
+                                    unoptimized
                                 />
                                 <button
                                     type="button"
@@ -159,18 +246,35 @@ export default function WritePage() {
                         {/* Preview */}
                         <div className="h-full border-l pl-8 hidden md:block">
                             <div className="prose prose-lg max-w-none">
-                                {description ? <ReactMarkdown>{description}</ReactMarkdown> : <span className="text-gray-300">Preview...</span>}
+                                {description ? (
+                                    <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeSanitize]}>
+                                        {description}
+                                    </ReactMarkdown>
+                                ) : (
+                                    <span className="text-gray-300">Preview...</span>
+                                )}
                             </div>
                         </div>
                     </div>
 
-                    <div className="flex justify-end pt-8 border-t">
-                        <Button type="submit" disabled={loading} className="btn-primary">
-                            {loading ? "Publishing..." : "Publish"} <IconSend size={18} className="ml-2" />
+                    <div className="flex justify-between pt-8 border-t gap-6 md:flex-row flex-col">
+                        <Button type="button" onClick={() => router.back()} disabled={loading} className="w-full md:w-1/2 flex items" variant="outline">
+                            {loading ? "Canceling..." : "Cancel"}
+                        </Button>
+                        <Button type="submit" disabled={loading} className="w-full md:w-1/2">
+                            {loading ? "Publishing..." : (editId ? "Update" : "Publish")} <IconSend size={18} className="ml-2" />
                         </Button>
                     </div>
                 </form>
             </div>
         </Section>
+    );
+}
+
+export default function WritePage() {
+    return (
+        <Suspense fallback={<div className="flex justify-center items-center h-screen"><span className="loading loading-spinner loading-lg"></span></div>}>
+            <WritePageContent />
+        </Suspense>
     );
 }

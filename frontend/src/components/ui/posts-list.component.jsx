@@ -5,6 +5,10 @@ import timeAgo from "@/lib/timeAgo";
 import { getImageUrl } from "@/lib/imageUrl";
 import { IconEye } from "@tabler/icons-react";
 import VoteControl from "./vote-control.component";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import rehypeSanitize from "rehype-sanitize";
+import previewText from "@/utils/previewText";
 
 export default function PostsList({ posts }) {
   return (
@@ -25,14 +29,17 @@ export default function PostsList({ posts }) {
                 />
                 <span className="text-sm">{post.author.nickname}</span>
               </div>
-              <h2 className="md:text-2xl text-lg font-semibold group-hover:text-primary transition-all duration-100">
+              <h2 className="md:text-2xl text-xl font-semibold group-hover:text-primary transition-all duration-100">
                 {post.title}
               </h2>
-              <p className="md:text-md text-sm md:block hidden max-w-2xl text-justify">
-                {post.body}
-              </p>
+              <div className="prose prose-sm md:block hidden">
+                <ReactMarkdown remarkPlugins={[remarkGfm]}
+                  rehypePlugins={[rehypeSanitize]}>
+                  {previewText(post.body)}
+                </ReactMarkdown>
+              </div>
               <div className="flex justify-between items-center">
-                <div className="flex items-center gap-2 text-sm">
+                <div className="flex items-center gap-2 md:text-sm text-xs">
                   <span>{timeAgo(post.createdAt)}</span>
                   <span>·</span>
                   <span>{post.readingTime} Min Read</span>
@@ -41,16 +48,15 @@ export default function PostsList({ posts }) {
                     <IconEye size={16} />
                     <span>{post.views || 0}</span>
                   </div>
-                  <div className="badge badge-ghost group-hover:badge-neutral text-sm">
-                    {post.tags[0]}
+                  <div className="badge badge-ghost group-hover:badge-neutral font-medium md:text-sm text-xs">
+                    #{post.tags[0]}
                   </div>
-                  <span>·</span>
-                  <VoteControl post={post} />
-                </div>
-                <div className="flex items-center">
-
                 </div>
               </div>
+              <div>
+                <VoteControl post={post} />
+              </div>
+
             </div>
             <div className="flex items-center">
               <div className="w-28 h-28 shrink-0 overflow-hidden rounded-lg">

@@ -16,14 +16,12 @@ export default function VoteControl({ post, size = 16 }) {
     const isDisliked = userId && dislikes.includes(userId);
 
     const handleVote = async (e, type) => {
-        e.preventDefault(); // Prevent Link navigation
+        e.preventDefault();
         if (!user) {
-            // Maybe show toast? For now just return or console log
             console.log("Please login to vote");
             return;
         }
 
-        // Optimistic update
         const prevLikes = [...likes];
         const prevDislikes = [...dislikes];
 
@@ -57,7 +55,7 @@ export default function VoteControl({ post, size = 16 }) {
         <div className="flex items-center gap-3 text-base-content/70">
             <button
                 onClick={(e) => handleVote(e, 'like')}
-                className={`flex items-center gap-1 hover:text-primary transition-colors ${isLiked ? "text-primary" : ""}`}
+                className={`flex cursor-pointer items-center gap-1 hover:text-primary transition-colors ${isLiked ? "text-primary" : ""}`}
                 title="Like"
             >
                 <IconThumbUp size={size} fill={isLiked ? "currentColor" : "none"} />
@@ -65,7 +63,7 @@ export default function VoteControl({ post, size = 16 }) {
             </button>
             <button
                 onClick={(e) => handleVote(e, 'dislike')}
-                className={`flex items-center gap-1 hover:text-error transition-colors ${isDisliked ? "text-error" : ""}`}
+                className={`flex cursor-pointer items-center gap-1 hover:text-error transition-colors ${isDisliked ? "text-error" : ""}`}
                 title="Dislike"
             >
                 <IconThumbDown size={size} fill={isDisliked ? "currentColor" : "none"} />

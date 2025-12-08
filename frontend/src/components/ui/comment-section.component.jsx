@@ -5,7 +5,7 @@ import Avatar from "@/components/ui/avatar.component";
 import { getImageUrl } from "@/lib/imageUrl";
 import timeAgo from "@/lib/timeAgo";
 import { useAuth } from "@/context/auth.context";
-import { IconSend, IconTrash } from "@tabler/icons-react";
+import { IconSend, IconTrash, IconDots } from "@tabler/icons-react";
 
 // Comment Item Component
 const CommentItem = ({ comment, replies, addReply, deleteComment, currentUserId, depth = 0 }) => {
@@ -31,9 +31,19 @@ const CommentItem = ({ comment, replies, addReply, deleteComment, currentUserId,
                             <span className="text-xs text-base-content/60">{timeAgo(comment.createdAt)}</span>
                         </div>
                         {currentUserId === comment.author?._id && (
-                            <button onClick={() => deleteComment(comment._id)} className="text-error btn btn-ghost btn-xs">
-                                <IconTrash size={14} />
-                            </button>
+                            <div className="dropdown dropdown-end">
+                                <div tabIndex={0} role="button" className="btn btn-ghost btn-xs btn-circle">
+                                    <IconDots size={14} />
+                                </div>
+                                <ul tabIndex={0} className="dropdown-content z-1 menu p-2 shadow bg-base-100 rounded-box w-28">
+                                    <li>
+                                        <button onClick={() => deleteComment(comment._id)} className="flex items-center gap-2 text-error text-xs">
+                                            <IconTrash size={14} />
+                                            Delete
+                                        </button>
+                                    </li>
+                                </ul>
+                            </div>
                         )}
                     </div>
                     <p className="text-sm">{comment.content}</p>
@@ -136,7 +146,6 @@ export default function CommentSection({ postId }) {
         }
     }
 
-    // Build tree
     const buildTree = (comments) => {
         const map = {};
         const roots = [];
@@ -172,8 +181,16 @@ export default function CommentSection({ postId }) {
                             rows={2}
                             value={newComment}
                             onChange={(e) => setNewComment(e.target.value)}
+                            onKeyDown={(e) => {
+                                if (e.key === "Enter" && !e.shiftKey) {
+                                    e.preventDefault();
+                                    if (newComment.trim()) {
+                                        handleSubmit(e);
+                                    }
+                                }
+                            }}
                         />
-                        <button type="submit" disabled={!newComment.trim()} className="btn btn-primary rounded-full px-2"><IconSend/></button>
+                        <button type="submit" disabled={!newComment.trim()} className="btn btn-primary rounded-full px-2"><IconSend /></button>
                     </div>
                 </form>
             ) : (
@@ -195,7 +212,7 @@ export default function CommentSection({ postId }) {
                         />
                     ))
                 ) : (
-                    <p className="text-gray-500 text-sm">No comments yet. Be the first to share your thoughts!</p>
+                    <p className="text-neutral text-sm">No comments yet. Be the first to share your thoughts!</p>
                 )}
             </div>
         </div>

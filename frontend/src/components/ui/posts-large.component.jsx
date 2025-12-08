@@ -5,6 +5,10 @@ import Avatar from "@/components/ui/avatar.component";
 import { getImageUrl } from "@/lib/imageUrl";
 import { IconEye } from "@tabler/icons-react";
 import VoteControl from "./vote-control.component";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import rehypeSanitize from "rehype-sanitize";
+import previewText from "@/utils/previewText";
 
 export default function PostsLarge({ posts }) {
   return (
@@ -28,7 +32,9 @@ export default function PostsLarge({ posts }) {
                 <p className="text-sm">{post.author.nickname}</p>
               </div>
               <h2 className="font-semibold text-2xl group-hover:text-primary transition-all duration-100">{post.title}</h2>
-              <p className="text-sm">{post.body}</p>
+              <div className="prose prose-sm">
+                <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeSanitize]}>{previewText(post.body)}</ReactMarkdown>
+              </div>
               <div className="flex items-center gap-2 text-sm">
                 <span>{timeAgo(post.createdAt)}</span>
                 <span>·</span>
@@ -38,10 +44,11 @@ export default function PostsLarge({ posts }) {
                   <IconEye size={16} />
                   <span>{post.views || 0}</span>
                 </div>
-                <div className="badge badge-ghost group-hover:badge-neutral text-sm">
-                  {post.tags[0]}
+                <div className="badge badge-ghost group-hover:badge-neutral font-medium md:text-sm text-xs">
+                  #{post.tags[0]}
                 </div>
-                <span>·</span>
+              </div>
+              <div>
                 <VoteControl post={post} />
               </div>
             </div>

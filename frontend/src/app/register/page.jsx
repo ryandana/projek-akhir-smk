@@ -11,39 +11,63 @@ import Image from "next/image";
 import Link from "next/link";
 import api from "@/lib/api";
 import { useAuth } from "@/context/auth.context";
+import { useToast } from "@/context/toast.context";
 
 export default function Register() {
   const router = useRouter();
   const { user, loading: authLoading } = useAuth();
+  const { addToast } = useToast();
+
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [error, setError] = useState(null);
+
   const [loading, setLoading] = useState(false);
+  const [validations, setValidations] = useState({
+    username: "",
+    email: "",
+    password: "",
+    confirmPassword: ""
+  });
 
+  const validateEmail = (email) => {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email);
+  };
 
+  useEffect(() => {
+    // Realtime validation
+    setValidations(prev => ({
+      ...prev,
+      username: username.length > 0 && username.length < 3 ? "Username must be at least 3 characters" : "",
+      email: email.length > 0 && !validateEmail(email) ? "Invalid email address" : "",
+      password: password.length > 0 && password.length < 6 ? "Password must be at least 6 characters" : "",
+      confirmPassword: confirmPassword.length > 0 && password !== confirmPassword ? "Passwords do not match" : ""
+    }));
+  }, [username, email, password, confirmPassword]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(null);
-    if (password !== confirmPassword) {
-      setError("Passwords do not match");
+
+    // Final check
+    if (Object.values(validations).some(msg => msg) || !username || !email || !password || !confirmPassword) {
+      addToast("Please fix the errors in the form", "error");
       return;
     }
 
     setLoading(true);
     try {
-      const data = await api.post("/api/auth/register", {
+      await api.post("/api/auth/register", {
         email,
         username,
         password,
       });
 
-      // If backend returns created user, navigate to login or home
-      router.push("/login");
+      addToast("Registration successful! redirecting...", "success");
+      setTimeout(() => router.push("/login"), 1500);
     } catch (err) {
-      setError(err?.data?.message || err.message || "Failed to register");
+      addToast(err?.data?.message || err.message || "Failed to register", "error");
     } finally {
       setLoading(false);
     }
@@ -75,9 +99,6 @@ export default function Register() {
           Create an account
         </h1>
         <fieldset className="fieldset w-full max-w-md px-4 md:px-0 space-y-3">
-          {error && (
-            <div className="text-red-600 text-sm text-center">{error}</div>
-          )}
           <div className="column-gap">
             <legend className="legend">Username</legend>
             <UsernameInput
@@ -85,6 +106,7 @@ export default function Register() {
               onChange={(e) => setUsername(e.target.value)}
               name="username"
             />
+            {validations.username && <span className="text-xs text-error mt-1">{validations.username}</span>}
           </div>
           <div className="column-gap">
             <legend className="legend">Email</legend>
@@ -93,6 +115,7 @@ export default function Register() {
               onChange={(e) => setEmail(e.target.value)}
               name="email"
             />
+            {validations.email && <span className="text-xs text-error mt-1">{validations.email}</span>}
           </div>
           <div className="column-gap">
             <legend className="legend">Password</legend>
@@ -101,6 +124,7 @@ export default function Register() {
               onChange={(e) => setPassword(e.target.value)}
               name="password"
             />
+            {validations.password && <span className="text-xs text-error mt-1">{validations.password}</span>}
           </div>
           <div className="column-gap">
             <legend className="legend">Confirm Password</legend>
@@ -109,8 +133,9 @@ export default function Register() {
               onChange={(e) => setConfirmPassword(e.target.value)}
               name="confirmPassword"
             />
+            {validations.confirmPassword && <span className="text-xs text-error mt-1">{validations.confirmPassword}</span>}
           </div>
-          <Button type="submit" disabled={loading}>
+          <Button type="submit" disabled={loading || Object.values(validations).some(msg => msg)}>
             {loading ? "Registering..." : "Register"}
           </Button>
           <Link className="link block text-center" href={"/login"}>

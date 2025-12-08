@@ -1,6 +1,8 @@
-import {JetBrains_Mono, Crimson_Pro, Inter } from "next/font/google";
+import { JetBrains_Mono, Crimson_Pro, Inter } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/context/auth.context";
+import { ToastProvider } from "@/context/toast.context";
+import { ConfirmProvider } from "@/context/confirm.context";
 
 const crimsonPro = Crimson_Pro({
   variable: "--font-crimson-pro",
@@ -29,7 +31,13 @@ export default function RootLayout({ children }) {
       <body
         className={`${crimsonPro.variable} ${jetbrainsMono.variable} ${inter.variable} antialiased`}
       >
-        <AuthProvider>{children}</AuthProvider>
+        <AuthProvider>
+          <ToastProvider>
+            <ConfirmProvider>
+              {children}
+            </ConfirmProvider>
+          </ToastProvider>
+        </AuthProvider>
       </body>
     </html>
   );

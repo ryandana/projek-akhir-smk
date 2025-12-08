@@ -10,30 +10,53 @@ import Image from "next/image";
 import Link from "next/link";
 import api from "@/lib/api";
 import { useAuth } from "@/context/auth.context";
+import { useToast } from "@/context/toast.context";
 
 export default function Login() {
   const router = useRouter();
   const { user, loading: authLoading, refreshUser } = useAuth();
+  const { addToast } = useToast();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [validations, setValidations] = useState({
+    email: "",
+    password: ""
+  });
 
+  const validateEmail = (email) => {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email);
+  };
 
+  useEffect(() => {
+    // Realtime validation
+    setValidations(prev => ({
+      ...prev,
+      email: email.length > 0 && !validateEmail(email) ? "Invalid email address" : "",
+      password: password.length > 0 && password.length < 6 ? "Password must be at least 6 characters" : ""
+    }));
+  }, [email, password]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(null);
+
+    if (Object.values(validations).some(msg => msg) || !email || !password) {
+      addToast("Please fix the errors in the form", "error");
+      return;
+    }
+
     setLoading(true);
     try {
       await api.post("/api/auth/login", { email, password });
 
       // Refresh user context to populate avatar immediately
       await refreshUser();
-
-      router.push("/");
+      addToast("Login successful!", "success");
+      router.push("/feed");
     } catch (err) {
-      setError(err?.data?.message || err.message || "Login failed");
+      addToast(err?.data?.message || err.message || "Login failed", "error");
     } finally {
       setLoading(false);
     }
@@ -65,9 +88,6 @@ export default function Login() {
           Login to your existing account
         </h1>
         <fieldset className="fieldset w-full max-w-md px-4 md:px-0 space-y-3">
-          {error && (
-            <div className="text-red-600 text-sm text-center">{error}</div>
-          )}
           <div className="column-gap">
             <legend className="legend">Email</legend>
             <EmailInput
@@ -75,6 +95,7 @@ export default function Login() {
               onChange={(e) => setEmail(e.target.value)}
               name="email"
             />
+            {validations.email && <span className="text-xs text-error mt-1">{validations.email}</span>}
           </div>
           <div className="column-gap">
             <legend className="legend">Password</legend>
@@ -83,8 +104,9 @@ export default function Login() {
               onChange={(e) => setPassword(e.target.value)}
               name="password"
             />
+            {validations.password && <span className="text-xs text-error mt-1">{validations.password}</span>}
           </div>
-          <Button type="submit" disabled={loading}>
+          <Button type="submit" disabled={loading || Object.values(validations).some(msg => msg)}>
             {loading ? "Logging in..." : "Login"}
           </Button>
           <Link className="link block text-center" href={"/register"}>

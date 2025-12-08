@@ -2,23 +2,19 @@
 import { useState, useEffect } from "react";
 import api from "@/lib/api";
 import PostsList from "@/components/ui/posts-list.component";
-import { IconTrash, IconPencil } from "@tabler/icons-react";
+import { IconTrash, IconPencil, IconDots } from "@tabler/icons-react";
 import Link from "next/link";
+import { useConfirm } from "@/context/confirm.context";
+import { useToast } from "@/context/toast.context";
 
 export default function MyPostsTab() {
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(true);
+    const confirm = useConfirm();
+    const { addToast } = useToast();
 
     const fetchMyPosts = async () => {
         try {
-            // Since we don't have a dedicated endpoint yet, we might fallback to filtering or create one
-            // Ideally we should create /api/posts/me or usage of Author query param
-            // Assuming for now I can filter by author via query param as implemented in step 1 of my thought (Wait, I need to implement that in backend first)
-            // Wait, I haven't implemented filtering by author in backend yet. I only did search by text.
-            // Let's assume I will add `?myPosts=true` or similar, or just `/api/posts/me`
-            // Let's stick to `/api/posts?author=me` pattern if I modify controller, or `/api/posts/user/me`
-            // I'll assume `/api/posts/me` for cleanliness if I can add it, otherwise `/api/posts?author=me`
-            // I'll implement `GET /api/posts/me` in the backend next.
             const res = await api.get("/api/posts/me");
             setPosts(res.posts || res);
         } catch (error) {
@@ -32,16 +28,23 @@ export default function MyPostsTab() {
         fetchMyPosts();
     }, []);
 
-    const handleDelete = async (e, postId) => {
-        e.preventDefault(); // Prevent link click
-        if (!confirm("Are you sure you want to delete this post?")) return;
+    const handleDelete = async (postId) => {
+        const isConfirmed = await confirm({
+            title: "Delete Post",
+            message: "Are you sure you want to delete this post? This action cannot be undone.",
+            confirmLabel: "Delete",
+            variant: "danger"
+        });
+
+        if (!isConfirmed) return;
 
         try {
             await api.delete(`/api/posts/${postId}`);
             setPosts(posts.filter(p => p._id !== postId));
+            addToast("Post deleted successfully", "success");
         } catch (error) {
             console.error(error);
-            alert("Failed to delete post");
+            addToast("Failed to delete post", "error");
         }
     }
 
@@ -58,13 +61,26 @@ export default function MyPostsTab() {
                 <div className="space-y-6">
                     {posts.map(post => (
                         <div key={post._id} className="relative group">
-                            <div className="absolute right-0 top-0 z-10 flex gap-2 p-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                <Link href={`/write?edit=${post._id}`} className="btn btn-square btn-sm btn-ghost bg-base-100/50 backdrop-blur">
-                                    <IconPencil size={18} />
-                                </Link>
-                                <button onClick={(e) => handleDelete(e, post._id)} className="btn btn-square btn-sm btn-ghost text-error bg-base-100/50 backdrop-blur">
-                                    <IconTrash size={18} />
-                                </button>
+                            <div className="absolute right-2 top-2 z-10">
+                                <div className="dropdown dropdown-end">
+                                    <div tabIndex={0} role="button" className="btn btn-ghost btn-sm btn-circle">
+                                        <IconDots size={18} />
+                                    </div>
+                                    <ul tabIndex={0} className="dropdown-content z-1 menu p-2 shadow bg-base-100 rounded-box w-52">
+                                        <li>
+                                            <Link href={`/write?edit=${post._id}`} className="flex items-center gap-2">
+                                                <IconPencil size={16} />
+                                                Edit
+                                            </Link>
+                                        </li>
+                                        <li>
+                                            <button onClick={() => handleDelete(post._id)} className="flex items-center gap-2 text-error">
+                                                <IconTrash size={16} />
+                                                Delete
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
                             <PostsList posts={[post]} />
                         </div>
