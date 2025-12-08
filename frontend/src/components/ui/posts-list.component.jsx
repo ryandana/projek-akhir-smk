@@ -3,6 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import timeAgo from "@/lib/timeAgo";
 import { getImageUrl } from "@/lib/imageUrl";
+import { IconEye } from "@tabler/icons-react";
 
 export default function PostsList({ posts }) {
   return (
@@ -34,6 +35,11 @@ export default function PostsList({ posts }) {
                   <span>{timeAgo(post.createdAt)}</span>
                   <span>·</span>
                   <span>{post.readingTime} Min Read</span>
+                  <span>·</span>
+                  <div className="flex items-center gap-1">
+                    <IconEye size={16} />
+                    <span>{post.views || 0}</span>
+                  </div>
                   <div className="badge badge-ghost group-hover:badge-neutral text-sm">
                     {post.tags[0]}
                   </div>

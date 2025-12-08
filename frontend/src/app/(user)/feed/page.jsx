@@ -1,14 +1,16 @@
 import Section from "@/components/atoms/section.component";
 import PostsLarge from "@/components/ui/posts-large.component";
 import PostsList from "@/components/ui/posts-list.component";
+import SearchBar from "@/components/ui/search-bar.component";
 import { IconArrowRight } from "@tabler/icons-react";
 import Link from "next/link";
 
 import api from "@/lib/api";
 
-const getPosts = async () => {
+const getPosts = async (search = "") => {
   try {
-    const data = await api.get("/api/posts");
+    const query = search ? `?search=${encodeURIComponent(search)}` : "";
+    const data = await api.get(`/api/posts${query}`);
     return data;
   } catch (error) {
     console.error("Error fetching posts:", error);
@@ -16,13 +18,17 @@ const getPosts = async () => {
   }
 };
 
-export default async function Page() {
-  const { posts } = await getPosts();
+export default async function Page({ searchParams }) {
+  const { search } = (await searchParams) || {};
+  const { posts } = await getPosts(search);
 
   return (
     <Section className="py-24">
       <div className="flex w-full md:flex-row flex-col space-x-10 md:space-y-0 space-y-8 relative">
         <div className="flex flex-col md:space-y-6 space-y-8 md:w-2/3 w-full">
+          {/* Search Bar */}
+          <SearchBar />
+
           {/* Latest Posts Header */}
           <div className="flex w-full items-center justify-between">
             <h2 className="mb-3 text-xl font-semibold">Latest Posts</h2>

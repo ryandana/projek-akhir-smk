@@ -36,6 +36,10 @@ export async function put(path, body) {
   return axiosInstance.put(path, body);
 }
 
-const api = { post, get, put };
+export async function del(path) {
+  return axiosInstance.delete(path);
+}
+
+const api = { post, get, put, delete: del };
 
 export default api;

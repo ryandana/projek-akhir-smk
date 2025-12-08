@@ -3,7 +3,20 @@ import { saveImage, deleteImage } from "../utils/fileHandler.js";
 
 export const getAllPosts = async (req, res) => {
     try {
-        const posts = await Post.find()
+        const { search } = req.query;
+        let query = {};
+
+        if (search) {
+            query = {
+                $or: [
+                    { title: { $regex: search, $options: "i" } },
+                    { body: { $regex: search, $options: "i" } },
+                    { tags: { $regex: search, $options: "i" } },
+                ],
+            };
+        }
+
+        const posts = await Post.find(query)
             .populate("author", "nickname avatar_url")
             .sort({ createdAt: -1 });
 
@@ -16,10 +29,11 @@ export const getAllPosts = async (req, res) => {
 
 export const getSinglePost = async (req, res) => {
     try {
-        const findPost = await Post.findById(req.params.id).populate(
-            "author",
-            "nickname avatar_url"
-        );
+        const findPost = await Post.findByIdAndUpdate(
+            req.params.id,
+            { $inc: { views: 1 } },
+            { new: true }
+        ).populate("author", "nickname avatar_url");
         if (!findPost) {
             return res.status(404).json({ message: "Post not found" });
         }

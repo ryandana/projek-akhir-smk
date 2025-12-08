@@ -4,6 +4,8 @@ import Image from "next/image";
 import api from "@/lib/api";
 import ReactMarkdown from "react-markdown";
 import { getImageUrl } from "@/lib/imageUrl";
+import { IconEye } from "@tabler/icons-react";
+import CommentSection from "@/components/ui/comment-section.component";
 
 async function getPost(id) {
     try {
@@ -45,6 +47,11 @@ export default async function Page({ params }) {
                         <span>{timeAgo(post.createdAt)}</span>
                         <span>·</span>
                         <span>{post.readingTime || 1} min read</span>
+                        <span>·</span>
+                        <div className="flex items-center gap-1">
+                            <IconEye size={18} />
+                            <span>{post.views || 0}</span>
+                        </div>
                     </div>
 
                     <h1 className="text-4xl md:text-5xl font-bold leading-tight">{post.title}</h1>
@@ -71,6 +78,8 @@ export default async function Page({ params }) {
                 <article className="prose prose-lg prose-blue max-w-none">
                     <ReactMarkdown>{post.body}</ReactMarkdown>
                 </article>
+
+                <CommentSection postId={post._id} />
             </div>
         </Section>
     );
