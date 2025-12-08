@@ -12,6 +12,8 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/auth.context";
 import { motion, AnimatePresence } from "framer-motion";
+import Avatar from "@/components/ui/avatar.component";
+import { getImageUrl } from "@/lib/imageUrl";
 
 export default function Header({ navLinks }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -42,6 +44,8 @@ export default function Header({ navLinks }) {
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, [lastScrollY]);
+
+  const avatarUrl = user ? getImageUrl(user.avatar_url) : "";
 
   return (
     <>
@@ -94,28 +98,20 @@ export default function Header({ navLinks }) {
               <>
                 <div className="dropdown dropdown-end">
                   <button className="btn btn-ghost btn-circle avatar placeholder">
-                    <div className="bg-neutral text-neutral-content rounded-full w-10 flex items-center justify-center">
-                      {user?.nickname ? (
-                        <span className="text-xl font-bold">
-                          {user.nickname.charAt(0).toUpperCase()}
-                        </span>
-                      ) : (
-                        <span className="text-xl">?</span>
-                      )}
-                    </div>
+                    <Avatar
+                      src={avatarUrl}
+                      alt={user.nickname}
+                      size={40}
+                    />
                   </button>
                   <ul className="dropdown-content z-50 menu p-2 shadow bg-base-100 rounded-box w-64 mt-3 font-medium">
                     <li className="menu-title px-4 py-2">
                       <div className="flex items-center space-x-3">
-                        <div className="bg-neutral text-neutral-content rounded-full w-10 h-10 flex items-center justify-center shrink-0">
-                          {user?.nickname ? (
-                            <span className="text-lg font-bold">
-                              {user.nickname.charAt(0).toUpperCase()}
-                            </span>
-                          ) : (
-                            <span className="text-lg">?</span>
-                          )}
-                        </div>
+                        <Avatar
+                          src={avatarUrl}
+                          alt={user.nickname}
+                          size={40}
+                        />
                         <div className="flex-1 min-w-0 text-black">
                           <p className="font-semibold text-base truncate">
                             {user.nickname}
@@ -230,15 +226,11 @@ export default function Header({ navLinks }) {
                   className="flex items-center justify-between p-4 hover:bg-base-200 rounded-lg transition-colors mb-3"
                 >
                   <div className="flex items-center space-x-3">
-                    <div className="bg-neutral text-neutral-content rounded-full w-12 h-12 flex items-center justify-center">
-                      {user?.nickname ? (
-                        <span className="text-2xl font-bold">
-                          {user.nickname.charAt(0).toUpperCase()}
-                        </span>
-                      ) : (
-                        <span className="text-2xl">?</span>
-                      )}
-                    </div>
+                    <Avatar
+                      src={avatarUrl}
+                      alt={user.nickname}
+                      size={48}
+                    />
                     <div>
                       <p className="font-semibold">{user.nickname}</p>
                       <p className="text-sm opacity-70">{user.email}</p>
@@ -264,3 +256,4 @@ export default function Header({ navLinks }) {
     </>
   );
 }
+

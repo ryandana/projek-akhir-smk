@@ -10,12 +10,13 @@ import { useAuth } from "@/context/auth.context";
 import api from "@/lib/api";
 import { IconPencil, IconUser } from "@tabler/icons-react";
 import Image from "next/image";
+import Avatar from "@/components/ui/avatar.component";
 
 import { getImageUrl } from "@/lib/imageUrl";
 
 export default function Profile() {
   const router = useRouter();
-  const { user, loading: authLoading, refreshUser } = useAuth(); // Assuming verifyUser re-fetches user
+  const { user, loading: authLoading, refreshUser } = useAuth();
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [nickname, setNickname] = useState("");
@@ -26,12 +27,7 @@ export default function Profile() {
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
   const fileInputRef = useRef(null);
 
-  // Redirect if not logged in
-  useEffect(() => {
-    if (!authLoading && !user) {
-      router.push("/login");
-    }
-  }, [user, authLoading, router]);
+
 
   // Populate form with user data
   useEffect(() => {
@@ -55,7 +51,7 @@ export default function Profile() {
       await api.put("/api/auth/me", updateData);
       setSuccess("Profile updated successfully");
       setPassword("");
-      refreshUser(); // Refresh user context
+      refreshUser();
     } catch (err) {
       setError(err?.data?.message || err.message || "Failed to update profile");
     } finally {
@@ -97,6 +93,8 @@ export default function Profile() {
     return null;
   }
 
+  const avatarUrl = getImageUrl(user.avatar_url);
+
   return (
     <Section className="flex flex-col items-center justify-center min-h-screen py-24">
       {error && (
@@ -116,17 +114,18 @@ export default function Profile() {
           {/* Avatar Upload */}
           <div className="flex justify-center mb-6 relative">
             <div className="relative group">
-              <div className="w-24 h-24 rounded-full bg-gray-200 overflow-hidden flex items-center justify-center border-2 border-base-200">
-                {user.avatar_url ? (
-                  <Image src={getImageUrl(user.avatar_url)} alt="Profile" fill className="object-cover rounded-full" unoptimized/>
-                ) : (
-                  <IconUser size={48} className="text-gray-400" />
-                )}
+              <div className="w-24 h-24 rounded-full bg-base-200 overflow-hidden flex items-center justify-center border-2 border-base-200">
+                <Avatar
+                  src={avatarUrl}
+                  alt="Profile"
+                  size={96}
+                  className="object-cover"
+                />
               </div>
               <button
                 onClick={() => fileInputRef.current?.click()}
                 disabled={uploadingAvatar}
-                className="absolute bottom-0 right-0 bg-primary text-primary-content p-1.5 rounded-full shadow-lg hover:bg-primary-focus transition-colors"
+                className="absolute bottom-0 right-0 bg-neutral text-neutral-content p-1.5 rounded-full shadow-lg hover:bg-neutral-focus transition-colors cursor-pointer"
               >
                 {uploadingAvatar ? <span className="loading loading-spinner loading-xs"></span> : <IconPencil size={16} />}
               </button>

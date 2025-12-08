@@ -19,12 +19,7 @@ export default function Login() {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  // Redirect if already logged in
-  useEffect(() => {
-    if (!authLoading && user) {
-      router.push("/feed");
-    }
-  }, [user, authLoading, router]);
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();

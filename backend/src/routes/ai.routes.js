@@ -13,7 +13,7 @@ router.post("/stream", async (req, res) => {
     try {
         const ollamaStream = await axios({
             method: "POST",
-            url: "http://localhost:11434/api/chat",
+            url: process.env.AI_API_URL + "/api/chat",
             data: {
                 model,
                 messages,

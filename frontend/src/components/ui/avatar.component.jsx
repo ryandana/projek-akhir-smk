@@ -4,7 +4,6 @@ import { IconUser } from "@tabler/icons-react";
 import Image from "next/image";
 
 export default function Avatar({ src, alt = "Avatar", size = 40, className = "" }) {
-    // Common sizes can be predefined or dynamic
     const hasSrc = src && src.trim() !== "";
 
     return (

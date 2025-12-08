@@ -10,11 +10,7 @@ import { useEffect } from "react";
 export default function Page() {
   const router = useRouter();
   const { user, loading: authLoading, refreshUser } = useAuth();
-  useEffect(() => {
-    if (!authLoading && user) {
-      router.push("/feed");
-    }
-  }, [user, authLoading, router]);
+
   return (
     <>
       <Section className="relative flex flex-col items-center justify-center max-w-screen py-32 px-4 text-center">
