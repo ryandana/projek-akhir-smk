@@ -8,21 +8,28 @@ import Link from "next/link";
 export default function Page() {
   return (
     <Section className="py-24">
-      <div className="flex w-full md:flex-row flex-col space-x-6 relative">
-        <div className="flex flex-col space-y-6 md:w-3/4 w-full">
+      <div className="flex w-full md:flex-row flex-col space-x-10 md:space-y-0 space-y-8 relative">
+        <div className="flex flex-col md:space-y-6 space-y-8 md:w-2/3 w-full">
+          {/* Latest Posts Header */}
           <div className="flex w-full items-center justify-between">
-            <h1 className="mb-3 text-lg font-semibold">Latest Posts</h1>
+            <h2 className="mb-3 text-xl font-semibold">Latest Posts</h2>
             <Link
               href="/explore"
-              className="flex items-center font-semibold gap-1"
+              className="flex items-center text-sm font-semibold gap-1"
             >
               See All
-              <IconArrowRight />
+              <IconArrowRight size={16}/>
             </Link>
           </div>
+          {/* Latest Posts */}
           <PostsList posts={posts} />
         </div>
-        <div className="md:sticky md:w-1/4 w-full flex flex-col space-y-3">
+        <div className="md:sticky md:w-1/3 w-full flex flex-col space-y-3">
+          {/* Popular Posts Header */}
+          <div className="flex w-full">
+            <h2 className="mb-3 text-xl font-semibold">Popular Posts</h2>
+          </div>
+          {/* Popular Posts */}
           <PostsLarge posts={posts} />
         </div>
       </div>

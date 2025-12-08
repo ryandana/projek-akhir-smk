@@ -24,6 +24,7 @@ services:
       - JWT_EXPIRES_IN=7d
     depends_on:
       - mongo
+      - ollama
     networks:
       - backend
   mongo:
@@ -34,9 +35,18 @@ services:
       - mongo_data:/data/db
     networks:
       - backend
+  ollama:
+    image: ollama/ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/data
+    networks:
+      - backend
 
 volumes:
   mongo_data:
+  ollama_data:
 
 networks:
   backend:

@@ -1,10 +1,15 @@
-import { Poppins, JetBrains_Mono, Crimson_Pro, Inter } from "next/font/google";
+import {JetBrains_Mono, Crimson_Pro, Inter } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/context/auth.context";
 
-const poppinsSans = Poppins({
-  variable: "--font-poppins-sans",
-  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+const crimsonPro = Crimson_Pro({
+  variable: "--font-crimson-pro",
+  weight: ["400", "500", "600", "700", "800", "900"],
+  subsets: ["latin"],
+});
+
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
 });
 
@@ -22,7 +27,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body
-        className={` ${poppinsSans.variable} ${jetbrainsMono.variable} antialiased`}
+        className={`${crimsonPro.variable} ${jetbrainsMono.variable} ${inter.variable} antialiased`}
       >
         <AuthProvider>{children}</AuthProvider>
       </body>

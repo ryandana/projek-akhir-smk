@@ -43,9 +43,13 @@
   }
 }
 
-* {
-  font-family: var(--font-poppins-sans);
+h2 {
+  font-family: var(--font-crimson-pro);
 }
+* {
+  font-family: var(--font-inter);
+}
+
 
 input:-webkit-autofill,
 input:-webkit-autofill:hover,

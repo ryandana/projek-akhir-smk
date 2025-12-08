@@ -10,7 +10,7 @@ export default function PostsList({ posts }) {
           <Link
             href={`/post/${post._id}`}
             key={post._id}
-            className="flex group justify-between rounded-lg"
+            className="flex group justify-between rounded-lg md:gap-0 gap-x-6"
           >
             <div className="space-y-2">
               <div className="flex items-center gap-2">
@@ -23,10 +23,10 @@ export default function PostsList({ posts }) {
                 />
                 <span className="text-sm">{post.author.nickname}</span>
               </div>
-              <h2 className="md:text-xl text-md font-semibold group-hover:text-primary transition-all duration-100">
+              <h2 className="md:text-2xl text-lg font-semibold group-hover:text-primary transition-all duration-100">
                 {post.title}
               </h2>
-              <p className="md:text-md text-sm max-w-2xl text-justify">
+              <p className="md:text-md text-sm md:block hidden max-w-2xl text-justify">
                 {post.body}
               </p>
               <div className="flex justify-between items-center">

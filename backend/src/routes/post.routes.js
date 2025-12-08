@@ -13,9 +13,9 @@ const router = Router();
 router.get("/", getAllPosts);
 router.get("/:id", getSinglePost);
 
-router.post("/", authMiddleware, createPost);
+router.post("/", authMiddleware, upload.single("thumbnail_url"), createPost);
 
-router.put("/:id", authMiddleware, updatePost);
+router.put("/:id", authMiddleware, upload.single("thumbnail_url"), updatePost);
 
 router.delete("/:id", authMiddleware, deletePost);
 
