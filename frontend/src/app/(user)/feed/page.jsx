@@ -38,7 +38,7 @@ export default async function Page() {
           {/* Latest Posts */}
           <PostsList posts={posts} />
         </div>
-        <div className="md:sticky md:top-24 md:w-1/3 w-full flex flex-col space-y-6 h-fit">
+        <div className="md:sticky md:top-28 md:w-1/3 w-full flex flex-col space-y-6 h-fit max-h-[calc(100vh-8rem)] overflow-y-auto no-scrollbar">
           {/* User Recommendations */}
           <UserRecommendationCard limit={5} />
 

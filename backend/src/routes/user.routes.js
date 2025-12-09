@@ -9,6 +9,7 @@ import {
     getFollowing,
     getRecommendedUsers,
     getPopularPosts,
+    deleteUser,
 } from "../controllers/user.controller.js";
 import authMiddleware from "../middlewares/auth.middleware.js";
 
@@ -26,5 +27,6 @@ router.get("/:username/following", getFollowing);
 // Protected routes
 router.get("/:username/follow-status", authMiddleware, checkFollowStatus);
 router.post("/:username/follow", authMiddleware, toggleFollow);
+router.delete("/me", authMiddleware, deleteUser);
 
 export default router;

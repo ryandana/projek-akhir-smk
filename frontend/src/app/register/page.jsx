@@ -142,6 +142,10 @@ export default function Register() {
           <Link className="link block text-center" href={"/login"}>
             Already have an account?
           </Link>
+
+          <p className="text-xs text-center text-neutral/50 mt-6 max-w-xs mx-auto leading-relaxed">
+            By creating an account, you agree to our <Link href="/terms" className="underline hover:text-neutral transition-colors">Terms of Service</Link> and <Link href="/privacy" className="underline hover:text-neutral transition-colors">Privacy Policy</Link>.
+          </p>
         </fieldset>
       </form>
     </Section>

@@ -270,3 +270,28 @@ export const getPopularPosts = async (req, res) => {
         return res.status(500).json({ message: "Internal server error" });
     }
 };
+
+// Delete user account
+export const deleteUser = async (req, res) => {
+    try {
+        const userId = req.user.id; // Assume authenticated user deleting themselves
+
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        // Delete all posts by this user
+        await Post.deleteMany({ author: userId });
+
+        // Delete the user
+        await User.findByIdAndDelete(userId);
+
+        res.status(200).json({
+            message: "User account and posts deleted successfully",
+        });
+    } catch (err) {
+        console.error(err.message);
+        return res.status(500).json({ message: "Internal server error" });
+    }
+};

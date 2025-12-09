@@ -113,6 +113,10 @@ export default function Login() {
           <Link className="link block text-center" href={"/register"}>
             Don&apos;t have an account?
           </Link>
+
+          <p className="text-xs text-center text-neutral/50 mt-6 max-w-xs mx-auto leading-relaxed">
+            By continuing, you agree to our <Link href="/terms" className="underline hover:text-neutral transition-colors">Terms of Service</Link> and <Link href="/privacy" className="underline hover:text-neutral transition-colors">Privacy Policy</Link>.
+          </p>
         </fieldset>
       </form>
     </Section>

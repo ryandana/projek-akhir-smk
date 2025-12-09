@@ -2,12 +2,14 @@
 
 import { createContext, useContext, useEffect, useState } from "react";
 import api from "@/lib/api";
+import { useRouter } from "next/navigation";
 
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   // Hydrate user from API on mount
   const fetchUser = async () => {
@@ -17,12 +19,14 @@ export function AuthProvider({ children }) {
       localStorage.setItem("user", JSON.stringify(data));
     } catch (err) {
       // If unauthorized (401), force logout to clear invalid cookies
-      if (err.status === 401) {
-        try {
+      try {
+        // If status is 401, it means token is invalid/expired
+        if (err.response?.status === 401 || err.status === 401) {
           await api.post("/api/auth/logout");
-        } catch (e) {
-          console.error("Force logout failed:", e);
+          router.push("/login"); // Force redirect
         }
+      } catch (e) {
+        console.error("Force logout failed:", e);
       }
 
       // Try localStorage fallback if API fails
@@ -46,6 +50,7 @@ export function AuthProvider({ children }) {
   const logout = async () => {
     try {
       await api.post("/api/auth/logout", {});
+      router.push("/login"); // Redirect on explicit logout
     } catch (err) {
       console.error("Logout error:", err);
     } finally {

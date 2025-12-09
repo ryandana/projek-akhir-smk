@@ -4,22 +4,28 @@ export function middleware(request) {
   const token = request.cookies.get("token")?.value;
   const { pathname } = request.nextUrl;
 
+  const publicPaths = [
+    "/",
+    "/login",
+    "/register",
+    "/about",
+    "/privacy",
+    "/terms",
+  ];
+
+  const isPublicPath = publicPaths.some(
+    (path) => pathname === path || pathname.startsWith(path + "/")
+  );
+
   const isAuthPage =
     pathname === "/login" || pathname === "/register" || pathname === "/";
 
-  const isProtectedPath =
-    pathname.startsWith("/feed") ||
-    pathname.startsWith("/profile") ||
-    pathname.startsWith("/write") ||
-    pathname.startsWith("/post");
-
-  // Rule 1: If logged in (token exists) and trying to access auth pages (login, register, landing), redirect to feed
   if (token && isAuthPage) {
     return NextResponse.redirect(new URL("/feed", request.url));
   }
 
-  // Rule 2: If NOT logged in (no token) and trying to access protected pages, redirect to login
-  if (!token && isProtectedPath) {
+  // Rule 2: If NOT logged in (no token) and trying to access a non-public page, redirect to login
+  if (!token && !isPublicPath) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
