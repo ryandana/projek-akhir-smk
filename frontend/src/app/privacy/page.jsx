@@ -21,7 +21,7 @@ export default function PrivacyPage() {
                     <section>
                         <h2 className="text-xl font-bold text-neutral mb-3">1. Introduction</h2>
                         <p>
-                            At Scribe ("us", "we", or "our"), we respect your privacy and are committed to protecting it. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website or use our services.
+                            At Scribe &quot;us&quot;, &quot;we&quot;, or &quot;our&quot;, we respect your privacy and are committed to protecting it. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website or use our services.
                         </p>
                     </section>
 

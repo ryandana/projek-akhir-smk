@@ -119,7 +119,7 @@ export default function FollowingTab() {
                 </div>
                 <h3 className="text-lg font-semibold mb-2">Not following anyone</h3>
                 <p className="text-base-content/60 max-w-sm mb-6">
-                    When you follow people, they'll appear here.
+                    When you follow people, they&apos;ll appear here.
                 </p>
                 <Link href="/explore" className="btn btn-neutral btn-sm">
                     Discover People

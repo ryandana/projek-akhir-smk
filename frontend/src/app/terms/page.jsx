@@ -35,7 +35,7 @@ export default function TermsPage() {
                     <section>
                         <h2 className="text-xl font-bold text-neutral mb-3">3. User Content</h2>
                         <p className="mb-2">
-                            Our Service allows you to post, link, store, share and otherwise make available certain information, text, graphics, videos, or other material ("Content"). You are responsible for the Content that you post to the Service, including its legality, reliability, and appropriateness.
+                            Our Service allows you to post, link, store, share and otherwise make available certain information, text, graphics, videos, or other material &quot;Content&quot;. You are responsible for the Content that you post to the Service, including its legality, reliability, and appropriateness.
                         </p>
                     </section>
 

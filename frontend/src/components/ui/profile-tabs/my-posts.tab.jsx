@@ -55,7 +55,7 @@ export default function MyPostsTab() {
         <div className="space-y-4">
             {posts.length === 0 ? (
                 <div className="text-center py-10">
-                    <p>You haven't posted anything yet.</p>
+                    <p>You haven&apos;t posted anything yet.</p>
                     <Link href="/write" className="btn btn-neutral mt-4">Write your first post</Link>
                 </div>
             ) : (

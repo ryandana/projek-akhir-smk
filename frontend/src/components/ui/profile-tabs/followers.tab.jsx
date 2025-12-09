@@ -146,7 +146,7 @@ export default function FollowersTab() {
                 </div>
                 <h3 className="text-lg font-semibold mb-2">No followers yet</h3>
                 <p className="text-base-content/60 max-w-sm">
-                    When people follow you, they'll appear here.
+                    When people follow you, they&apos;ll appear here.
                 </p>
             </div>
         );

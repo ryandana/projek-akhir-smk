@@ -207,14 +207,12 @@ export default function Page() {
               <h4 className="font-semibold text-neutral mb-4">Product</h4>
               <ul className="space-y-2 text-sm text-neutral/70">
                 <li><Link href="/explore" className="hover:text-neutral">Explore</Link></li>
-                <li><Link href="/pricing" className="hover:text-neutral">Pricing</Link></li>
               </ul>
             </div>
             <div>
               <h4 className="font-semibold text-neutral mb-4">Company</h4>
               <ul className="space-y-2 text-sm text-neutral/70">
                 <li><Link href="/about" className="hover:text-neutral">About</Link></li>
-                <li><Link href="/blog" className="hover:text-neutral">Blog</Link></li>
               </ul>
             </div>
             <div>

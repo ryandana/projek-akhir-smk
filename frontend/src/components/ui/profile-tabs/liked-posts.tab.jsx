@@ -29,7 +29,7 @@ export default function LikedPostsTab() {
         <div className="space-y-8 flex flex-col">
             {posts.length === 0 ? (
                 <div className="text-center py-10">
-                    <p>You haven't liked any posts yet.</p>
+                    <p>You haven&apos;t liked any posts yet.</p>
                 </div>
             ) : (
                 <PostsList posts={posts} />

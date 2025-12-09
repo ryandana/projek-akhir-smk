@@ -1,17 +1,18 @@
 "use client";
 
 import Section from "@/components/atoms/section.component";
-import Link from "next/link";
 import { IconArrowLeft } from "@tabler/icons-react";
+import { useRouter } from "next/navigation";
 
 export default function AboutPage() {
+    const router = useRouter();
     return (
         <>
             <Section className="min-h-auto">
-                <Link href="/" className="inline-flex items-center gap-2 text-neutral/50 hover:text-neutral mb-8 transition-colors">
+                <button onClick={() => router.back()} className="inline-flex items-center gap-2 text-neutral/50 hover:text-neutral mb-8 transition-colors">
                     <IconArrowLeft size={20} />
-                    <span>Back to Home</span>
-                </Link>
+                    <span>Back</span>
+                </button>
 
                 <div className="max-w-3xl mx-auto">
                     <h1 className="text-4xl md:text-5xl font-bold text-neutral mb-8">About Scribe</h1>
