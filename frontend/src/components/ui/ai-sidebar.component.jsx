@@ -341,7 +341,7 @@ export default function AISidebar({ selectedText = "", documentContent = "", onI
                 <div className="flex items-center justify-between p-4 border-b border-base-300 bg-linear-to-r from-primary/10 to-secondary/10">
                     <div className="flex items-center gap-2">
                         <div>
-                            <h2 className="font-bold text-sm">GemoyAI</h2>
+                            <h2 className="font-bold text-sm">ScribeAI</h2>
                             <p className="text-xs text-base-content/60">Powered by Ollama</p>
                         </div>
                     </div>
