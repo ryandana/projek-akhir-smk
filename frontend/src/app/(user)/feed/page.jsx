@@ -1,4 +1,7 @@
 import Section from "@/components/atoms/section.component";
+
+export const dynamic = "force-dynamic";
+
 import PostsLarge from "@/components/ui/posts-large.component";
 import PostsList from "@/components/ui/posts-list.component";
 import UserRecommendationCard from "@/components/ui/user-recommendation-card.component";

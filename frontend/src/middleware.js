@@ -24,7 +24,6 @@ export function middleware(request) {
     return NextResponse.redirect(new URL("/feed", request.url));
   }
 
-  // Rule 2: If NOT logged in (no token) and trying to access a non-public page, redirect to login
   if (!token && !isPublicPath) {
     return NextResponse.redirect(new URL("/login", request.url));
   }

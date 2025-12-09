@@ -6,6 +6,9 @@ import { v4 as uuidv4 } from "uuid";
 const UPLOAD_DIR = path.join(process.cwd(), "public", "uploads");
 
 export const saveImage = async (buffer) => {
+    // Ensure upload directory exists
+    await fs.mkdir(UPLOAD_DIR, { recursive: true });
+
     const filename = `${uuidv4()}.webp`;
     const filepath = path.join(UPLOAD_DIR, filename);
 
