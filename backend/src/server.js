@@ -16,23 +16,14 @@ const app = express();
 dbConnect();
 
 // Allow requests from the frontend. Configure `CLIENT_URL` in .env for production.
-const allowedOrigins = [
-    process.env.CLIENT_URL,
-    process.env.CLIENT_DOCKER_URL,
-    process.env.NGROK_URL,
-];
+const clientUrl = [process.env.CLIENT_URL, process.env.CLIENT_DOCKER_URL, process.env.NGROK];
 app.use(
     cors({
-        origin: function (origin, callback) {
-            if (!origin || allowedOrigins.includes(origin)) {
-                callback(null, true);
-            } else {
-                callback(new Error("CORS blocked: " + origin));
-            }
-        },
+        origin: clientUrl,
         credentials: true,
     })
 );
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
