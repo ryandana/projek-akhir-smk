@@ -151,11 +151,6 @@ export default function ClientLandingContent() {
                 Start Writing
               </button>
             </Link>
-            <Link href="/explore">
-              <button className="btn btn-ghost btn-lg min-w-[200px] rounded-xl border border-base-300 hover:bg-base-200 font-medium">
-                Read Articles
-              </button>
-            </Link>
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-3 gap-8 mt-16 pt-10 border-t border-base-100">
