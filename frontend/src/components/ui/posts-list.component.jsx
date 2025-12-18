@@ -26,26 +26,28 @@ export default function PostsList({ posts }) {
           >
             <div className="space-y-2">
               <div className="flex items-center gap-2">
-                <div
-                  className="flex items-center gap-2 hover:text-primary transition-colors"
-                >
+                <div className="flex items-center gap-2 hover:text-neutral transition-colors">
                   <Avatar
                     src={getImageUrl(post.author?.avatar_url)}
-                    alt={post.author?.nickname || 'Author'}
+                    alt={post.author?.nickname || "Author"}
                     size={25}
                   />
-                  <span className="text-sm hover:underline">{post.author?.nickname || 'Unknown'}</span>
+                  <span className="text-sm hover:underline">
+                    {post.author?.nickname || "Unknown"}
+                  </span>
                 </div>
               </div>
-              <h2 className="md:text-2xl text-xl font-semibold group-hover:text-primary transition-all duration-100">
+              <h2 className="md:text-2xl text-xl font-semibold group-hover:text-neutral transition-all duration-100">
                 {post.title}
               </h2>
               <div className="prose prose-sm md:block hidden text-base-content/70">
                 {post.shortDescription ? (
                   <p className="line-clamp-2">{post.shortDescription}</p>
                 ) : (
-                  <ReactMarkdown remarkPlugins={[remarkGfm]}
-                    rehypePlugins={[rehypeSanitize]}>
+                  <ReactMarkdown
+                    remarkPlugins={[remarkGfm]}
+                    rehypePlugins={[rehypeSanitize]}
+                  >
                     {previewText(post.body)}
                   </ReactMarkdown>
                 )}
@@ -68,7 +70,6 @@ export default function PostsList({ posts }) {
               <div>
                 <VoteControl post={post} />
               </div>
-
             </div>
             <div className="flex items-center">
               <div className="w-28 h-28 shrink-0 overflow-hidden rounded-lg">
@@ -82,7 +83,7 @@ export default function PostsList({ posts }) {
                 />
               </div>
             </div>
-          </Link >
+          </Link>
         );
       })}
     </>

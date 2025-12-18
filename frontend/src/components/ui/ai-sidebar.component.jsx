@@ -368,7 +368,7 @@ export default function AISidebar({
       {/* Toggle Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`fixed right-0 top-1/2 -translate-y-1/2 z-50 btn btn-primary btn-sm rounded-r-none shadow-lg transition-all duration-300 ${
+        className={`fixed right-0 top-1/2 -translate-y-1/2 z-50 btn btn-neutral btn-sm rounded-r-none shadow-lg transition-all duration-300 ${
           isOpen ? "translate-x-full opacity-0" : "translate-x-0 opacity-100"
         }`}
         aria-label="Toggle AI Assistant"
@@ -384,7 +384,7 @@ export default function AISidebar({
         }`}
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-base-300 bg-linear-to-r from-primary/10 to-secondary/10">
+        <div className="flex items-center justify-between p-4 border-b border-base-300 bg-linear-to-r from-neutral/5 to-neutral/10">
           <div className="flex items-center gap-2">
             <div>
               <h2 className="font-bold text-sm">ScribeAI</h2>
@@ -430,7 +430,7 @@ export default function AISidebar({
                     key={model.id}
                     className={`flex items-center justify-between p-2 rounded-lg cursor-pointer transition-colors ${
                       selectedModel === model.id
-                        ? "bg-primary/20 border border-primary/40"
+                        ? "bg-neutral/20 border border-neutral/40"
                         : "bg-base-100 hover:bg-base-200 border border-transparent"
                     }`}
                     onClick={() => !isPulling && setSelectedModel(model.id)}
@@ -525,7 +525,7 @@ export default function AISidebar({
                 <div
                   className={`chat-bubble ${
                     msg.role === "user"
-                      ? "chat-bubble-primary"
+                      ? "chat-bubble-neutral"
                       : "bg-base-200 text-base-content"
                   } max-w-[85%] overflow-hidden`}
                 >
@@ -576,8 +576,8 @@ export default function AISidebar({
         {/* Input */}
         <div className="p-4 border-t border-base-300 bg-base-200/30">
           {selectedText && (
-            <div className="mb-2 p-2 bg-primary/10 rounded-lg border border-primary/20">
-              <p className="text-xs text-primary font-medium mb-1">
+            <div className="mb-2 p-2 bg-neutral/10 rounded-lg border border-neutral/20">
+              <p className="text-xs text-neutral font-medium mb-1">
                 Selected Text:
               </p>
               <p className="text-xs text-base-content/70 line-clamp-2">
@@ -616,7 +616,7 @@ export default function AISidebar({
               <button
                 onClick={() => sendMessage()}
                 disabled={!inputText.trim()}
-                className="btn btn-primary btn-square self-end"
+                className="btn btn-neutral btn-square self-end"
               >
                 <IconSend size={18} />
               </button>

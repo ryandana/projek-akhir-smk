@@ -134,7 +134,7 @@ export default function ClientLandingContent() {
 
           <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-neutral mb-8 leading-tight">
             Where{" "}
-            <span className="text-neutral underline decoration-wavy decoration-primary/50">
+            <span className="text-neutral underline decoration-wavy decoration-neutral/30">
               <TypingText texts={typingTexts} />
             </span>
             <br /> share what matters.
@@ -181,109 +181,6 @@ export default function ClientLandingContent() {
           </div>
         </div>
       </Section>
-
-      <Section className="pt-20 border-b border-base-100 bg-base-100">
-        <div className="max-w-3xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold text-neutral mb-4">
-              Frequently Asked Questions
-            </h2>
-            <p className="text-neutral/70">Common questions about Scribe.</p>
-          </div>
-
-          <div className="space-y-2">
-            <AccordionItem title="Is Scribe really free?">
-              Yes, our Starter plan is completely free and includes unlimited
-              reading and up to 3 published stories per month. It's perfect for
-              casual writers or those just starting out.
-            </AccordionItem>
-            <AccordionItem title="Can I export my data?">
-              Absolutely. You own your content. You can export all your articles
-              as Markdown files at any time, ensuring you're never locked into
-              our platform.
-            </AccordionItem>
-            <AccordionItem title="How does the AI assistant work?">
-              We use advanced large language models to analyze your text in
-              real-time. It suggests improvements for grammar, clarity, and
-              tone, but you always have the final say. It's like having a
-              professional editor over your shoulder.
-            </AccordionItem>
-            <AccordionItem title="Do you support custom domains?">
-              Yes, Pro and Team plan users can connect a custom domain to their
-              profile, giving their blog a fully professional look and feel.
-            </AccordionItem>
-          </div>
-        </div>
-      </Section>
-
-      {/* Footer */}
-      <footer className="border-t border-base-100 bg-base-100 pt-16 pb-8 overflow-hidden">
-        <div className="container mx-auto px-6">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-16 text-center md:text-left">
-            <div className="col-span-2 md:col-span-1">
-              <Link
-                href="/"
-                className="font-bold text-xl tracking-tight text-neutral inline-block"
-              >
-                Scribe.
-              </Link>
-              <p className="mt-4 text-sm text-neutral/60 leading-relaxed">
-                Built for developers who care about sharing knowledge clearly
-                and beautifully.
-              </p>
-            </div>
-
-            <div>
-              <h4 className="font-semibold text-neutral mb-4">Product</h4>
-              <ul className="space-y-2 text-sm text-neutral/70">
-                <li>
-                  <Link href="/explore" className="hover:text-neutral">
-                    Explore
-                  </Link>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold text-neutral mb-4">Company</h4>
-              <ul className="space-y-2 text-sm text-neutral/70">
-                <li>
-                  <Link href="/about" className="hover:text-neutral">
-                    About
-                  </Link>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold text-neutral mb-4">Legal</h4>
-              <ul className="space-y-2 text-sm text-neutral/70">
-                <li>
-                  <Link href="/privacy" className="hover:text-neutral">
-                    Privacy
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/terms" className="hover:text-neutral">
-                    Terms
-                  </Link>
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          <div className="border-t border-base-100 pt-8 flex flex-col items-center gap-4">
-            <p className="text-xs text-neutral/50">
-              © {new Date().getFullYear()} Scribe Inc.
-            </p>
-            <div className="flex gap-4"></div>
-          </div>
-
-          <div className="w-full flex justify-center mt-12 text-neutral select-none pointer-events-none">
-            <h1 className="text-[15vw] leading-none font-bold tracking-tighter text-center">
-              SCRIBE
-            </h1>
-          </div>
-        </div>
-      </footer>
     </>
   );
 }

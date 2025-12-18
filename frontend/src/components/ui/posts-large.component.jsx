@@ -27,13 +27,19 @@ export default function PostsLarge({ posts }) {
               />
             </div>
             <div className="py-4 flex flex-col gap-2">
-              <div
-                className="flex items-center gap-1.5 hover:text-primary transition-colors w-fit"
-              >
-                <Avatar src={getImageUrl(post.author?.avatar_url)} alt={post.author?.nickname || 'Author'} size={25} />
-                <p className="text-sm hover:underline">{post.author?.nickname || 'Unknown'}</p>
+              <div className="flex items-center gap-1.5 hover:text-neutral transition-colors w-fit">
+                <Avatar
+                  src={getImageUrl(post.author?.avatar_url)}
+                  alt={post.author?.nickname || "Author"}
+                  size={25}
+                />
+                <p className="text-sm hover:underline">
+                  {post.author?.nickname || "Unknown"}
+                </p>
               </div>
-              <h2 className="font-semibold text-2xl group-hover:text-primary transition-all duration-100">{post.title}</h2>
+              <h2 className="font-semibold text-2xl group-hover:text-neutral transition-all duration-100">
+                {post.title}
+              </h2>
               <div className="prose prose-sm text-base-content/70">
                 {post.shortDescription}
               </div>

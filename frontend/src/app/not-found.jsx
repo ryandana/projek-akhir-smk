@@ -11,10 +11,10 @@ export default function NotFoundPage() {
       <div className="container mx-auto px-4">
         <div className="flex flex-col items-center justify-center text-center space-y-8">
           <div className="relative">
-            <h1 className="text-[150px] font-inter-sans md:text-[200px] font-bold text-transparent bg-clip-text bg-linear-to-r from-primary to-secondary leading-none">
+            <h1 className="text-[150px] font-inter-sans md:text-[200px] font-bold text-transparent bg-clip-text bg-linear-to-r from-neutral to-neutral/50 leading-none">
               404
             </h1>
-            {/* <div className="absolute inset-0 blur-3xl opacity-20 bg-linear-to-r from-primary to-secondary"></div> */}
+            {/* <div className="absolute inset-0 blur-3xl opacity-20 bg-linear-to-r from-neutral to-neutral/50"></div> */}
           </div>
           <div className="space-y-4 max-w-md">
             <h2 className="text-3xl md:text-4xl font-bold text-base-content">
@@ -27,10 +27,7 @@ export default function NotFoundPage() {
           </div>
 
           <div className="flex flex-col justify-center items-center gap-4 w-full pt-4">
-            <button
-              onClick={() => window.history.back()}
-              className="btn gap-2"
-            >
+            <button onClick={() => window.history.back()} className="btn gap-2">
               <IconArrowLeft size={20} />
               Go Back
             </button>
